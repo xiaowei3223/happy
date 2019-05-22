@@ -1,0 +1,179 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>celebrateday</title>
+<script>
+//---------------------------------------------------------------------------------------------------------------
+//用来计算过去的时间与当前时间相隔多少天
+function GetDateDiff(startTime) {
+    //将xxxx-xx-xx的时间格式，转换为 xxxx/xx/xx的格式 
+    startTime = startTime.replace(/\-/g, "/");
+    //将计算间隔类性字符转换为小写
+    var sTime =new Date(startTime); //开始时间
+    var eTime =new Date(); //结束时间
+    //作为除数的数字
+    var timeType =1;
+            timeType =1000*3600*24;
+	diffday = parseInt((eTime.getTime() - sTime.getTime()) / parseInt(timeType))
+	if (diffday <0){ 
+	return -diffday}
+	else{
+    return diffday;}
+}
+
+//------------------------------------------------------------------------------------------------------------------------------------
+/*
+ *   功能:实现VBScript的DateAdd功能.
+ *   参数:interval,字符串表达式，表示要添加的时间间隔.
+ *   参数:number,数值表达式，表示要添加的时间间隔的个数.
+ *   参数:date,时间对象.
+ *   返回:新的时间对象.
+ *   var now = new Date();
+ *   var newDate = DateAdd( "d", 5, now);
+ *---------------   DateAdd(interval,number,date)   -----------------
+ */
+function DateAdd(interval, number, date) {
+    switch (interval) {
+    case "y ": {
+        date.setFullYear(date.getFullYear() + number);
+        return date;
+        break;
+    }
+    case "q ": {
+        date.setMonth(date.getMonth() + number * 3);
+        return date;
+        break;
+    }
+    case "m ": {
+        date.setMonth(date.getMonth() + number);
+        return date;
+        break;
+    }
+    case "w ": {
+        date.setDate(date.getDate() + number * 7);
+        return date;
+        break;
+    }
+    case "d ": {
+        date.setDate(date.getDate() + number);
+        return date;
+        break;
+    }
+    case "h ": {
+        date.setHours(date.getHours() + number);
+        return date;
+        break;
+    }
+    case "m ": {
+        date.setMinutes(date.getMinutes() + number);
+        return date;
+        break;
+    }
+    case "s ": {
+        date.setSeconds(date.getSeconds() + number);
+        return date;
+        break;
+    }
+    default: {
+        date.setDate(d.getDate() + number);
+        return date;
+        break;
+    }
+    }
+}
+
+//var now = new Date();
+// 加五天.
+//var newDate = DateAdd("d ", 6, now);
+//alert(newDate.toLocaleDateString())
+// 加两个月.
+//newDate = DateAdd("m ", 2, now);
+//alert(newDate.toLocaleDateString())
+// 加一年
+//newDate = DateAdd("y ", 1, now);
+//alert(newDate.toLocaleDateString())
+
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		//现在这一个函数就可以计算纪念日是什么日期了
+		//第一个参数是恋人开始的时间，格式是"XXXX/XX/XX",
+		//第二个参数是天数
+function getCelebrateDay(startTime, days){
+			//	startTime = "2018/11/27" //这是第一天认识的
+			startTime = startTime.replace(/\-/g, "/");
+ 		   //将计算间隔类性字符转换为小写
+ 		   var sTime =new Date(startTime); //开始时间
+			var newDate = DateAdd("d ", days, sTime); //设置认识99天纪念日 ,嵌套上一个函数
+			return newDate.toLocaleDateString()
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+</script>
+</head>
+<body>
+ <center>
+<h1 >我叫雯爷</h1><!--建立标题-->
+<hr><!--插入水平线-->
+
+<table border="" cellspacing="" cellpadding="" style="background-color: #ffffe5;width: 80%;">
+
+<tr>
+
+
+<td width="50%" height="60%" style=" padding: 32px;">
+<!--设置一个计算有意义的时间距离-->
+<div  >
+	<p>现在是 
+	<span style="color:#00ccff ;" > 
+		<script>document.write(Date())
+		</script>
+	</span> 
+</p>
+<hr />	
+<p>2018年11月27日认识（第一次见面），认识第 
+	<span style="color:#00ccff ;" > 
+		<script>document.write(GetDateDiff("2018/11/27"))
+		</script>
+	</span> 天
+</p>
+
+<p>2019年2月14日成为恋人，恋人第
+	<span style="color:#00ccff ;" > 
+		<script>
+			document.write(GetDateDiff("2019/02/14"))
+		</script></span>	天
+</p>
+
+<p>离你2019年六月十四（农历）生日还有
+	<span style="color:#00ccff ;" > 
+		<script>document.write(GetDateDiff("2019/07/16"))
+		</script>
+	</span>	天
+</p>
+<hr />
+<h1 style="text-align: center;">纪念日</h1>
+<p>2018年11月27日认识（第一次见面），认识99天纪念日是
+	<span style="color:#00ccff ;" > 
+		<script>
+			document.write(getCelebrateDay("2018/11/27", 99))
+		</script></span>
+</p>
+<p>
+2019年2月14日成为恋人，恋人99天纪念日
+<span style="color:#00ccff ;" > 
+		<script>
+		//设置认识99天纪念日
+			document.write(getCelebrateDay("2019/02/14", 99))
+		//第一个参数是恋人开始的时间，格式是"XXXX/XX/XX",第二个参数是天数
+		</script></span>
+
+</p>
+</div>
+</td>
+</tr>
+</table>
+</center>
+</body>
+</html>
