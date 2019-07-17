@@ -6,7 +6,7 @@
 <script>
 //---------------------------------------------------------------------------------------------------------------
 //用来计算过去的时间与当前时间相隔多少天
-function GetDateDiff(startTime) {
+function GetDateDiffstart(startTime) {
     //将xxxx-xx-xx的时间格式，转换为 xxxx/xx/xx的格式 
     startTime = startTime.replace(/\-/g, "/");
     //将计算间隔类性字符转换为小写
@@ -16,12 +16,35 @@ function GetDateDiff(startTime) {
     var timeType =1;
             timeType =1000*3600*24;
 	diffday = parseInt((eTime.getTime() - sTime.getTime()) / parseInt(timeType))
-	if (diffday <0){ 
+	if (diffday <0){
 	return -diffday}
 	else{
     return diffday;}
 }
 
+
+
+//---------------------------------------------------------------------------------------------------------------
+
+//用来计算当前时间与未来某一天相隔多少天
+function GetDateDiffend(EndTime) {
+    //将xxxx-xx-xx的时间格式，转换为 xxxx/xx/xx的格式 
+    EndTime = EndTime.replace(/\-/g, "/");
+    //将计算间隔类性字符转换为小写
+    var sTime =new Date(EndTime); //开始时间
+    var eTime =new Date(); //结束时间
+    //作为除数的数字
+    var timeType =1;
+            timeType =1000*3600;
+	Allhours = (sTime.getTime()- eTime.getTime()) / parseInt(timeType)
+	diffday = parseInt(Allhours/24)
+	diffhours = Allhours%24
+	diffhour = diffhours.toFixed(1)  //tofixed的参数是用来保留几位小数并且四舍五入
+	if (diffday <0 ){
+	return -diffday + '天' + -diffhour + '小时'}
+	else{
+    return diffday + '天' + diffhour + '小时';}
+}
 //------------------------------------------------------------------------------------------------------------------------------------
 /*
  *   功能:实现VBScript的DateAdd功能.
@@ -115,7 +138,7 @@ function getCelebrateDay(startTime, days){
 <body>
  <center>
  
-<h1 >好好学习，天天向上</h1><!--建立标题-->
+<h1 >宁姝的世界</h1><!--建立标题-->
 <div style="padding-right: 10%">
 <p align="right" >时有女子，亦有宁姝；美口善言，和颜善笑。</p>
 </div>
@@ -136,9 +159,10 @@ function getCelebrateDay(startTime, days){
 	</span> 
 </p>
 <hr />	
+<h1 style="text-align: center;">相识与恋爱</h1>
 <p>2018年11月27日认识（第一次见面），认识第 
 	<span style="color:#00ccff ;font-size:32px;" > 
-		<script>document.write(GetDateDiff("2018/11/27"))
+		<script>document.write(GetDateDiffstart("2018/11/27"))
 		</script>
 	</span> 天
 </p>
@@ -146,40 +170,41 @@ function getCelebrateDay(startTime, days){
 <p>2019年2月14日成为恋人，恋人第
 	<span style="color:#00ccff ;font-size:32px;" > 
 		<script>
-			document.write(GetDateDiff("2019/02/14"))
+			document.write(GetDateDiffstart("2019/02/14"))
 		</script></span>	天
 </p>
 
+<hr />
+<h1 style="text-align: center;">生日倒计时</h1>
 <p>离我2020年六月十四（农历）生日还有
 	<span style="color:#00ccff ;font-size:32px;" > 
-		<script>document.write(GetDateDiff("2020/08/03"))
+		<script>document.write(GetDateDiffend("2020/08/03"))
 		</script>
-	</span>	天
+	</span>	
 </p>
 	<p>离你2020年正月十三（农历）生日还有
 	<span style="color:#00ccff ;font-size:32px;" > 
-		<script>document.write(GetDateDiff("2020/02/06"))
+		<script>document.write(GetDateDiffend("2020/02/06"))
 		</script>
-	</span>	天
+	</span>	
 </p>
 <hr />
 <h1 style="text-align: center;">纪念日</h1>
-<p>2018年11月27日认识（第一次见面），认识299天纪念日是
-	<span style="color:#00ccff ;" > 
+<p>认识299天纪念日是
+	<span style="color:#00ccff ;font-size:32px;" > 
 		<script>
 			document.write(getCelebrateDay("2018/11/27", 299))
 			//第一个参数是认识的时间，格式是"XXXX/XX/XX",第二个参数是天数
 		</script></span>
 </p>
 <p>
-2019年2月14日成为恋人，恋人199天纪念日
-<span style="color:#00ccff ;" > 
+恋人199天纪念日
+<span style="color:#00ccff ;font-size:32px;" > 
 		<script>
 		//设置认识99天纪念日
 			document.write(getCelebrateDay("2019/02/14", 199))
 		//第一个参数是恋人开始的时间，格式是"XXXX/XX/XX",第二个参数是天数
 		</script></span>
-
 </p>
 </div>
 </td>
