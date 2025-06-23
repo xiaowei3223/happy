@@ -4,221 +4,157 @@
 <meta charset="utf-8">
 <title>celebrateday</title>
 <script>
-//---------------------------------------------------------------------------------------------------------------
-//用来计算过去的时间与当前时间相隔多少天
+// 已认识多少天
 function GetDateDiffstart(startTime) {
-    //将xxxx-xx-xx的时间格式，转换为 xxxx/xx/xx的格式 
     startTime = startTime.replace(/\-/g, "/");
-    //将计算间隔类性字符转换为小写
-    var sTime =new Date(startTime); //开始时间
-    var eTime =new Date(); //结束时间
-    //作为除数的数字
-    var timeType =1;
-            timeType =1000*3600*24;
-	diffday = parseInt((eTime.getTime() - sTime.getTime()) / parseInt(timeType))
-	if (diffday <0){
-	return -diffday}
-	else{
-    return diffday;}
+    var sTime = new Date(startTime);
+    var eTime = new Date();
+    var timeType = 1000 * 3600 * 24;
+    var diffday = parseInt((eTime - sTime) / timeType);
+    return diffday >= 0 ? diffday : -diffday;
 }
 
-
-
-//---------------------------------------------------------------------------------------------------------------
-
-//用来计算当前时间与未来某一天相隔多少天
-function GetDateDiffend(EndTime) {
-    //将xxxx-xx-xx的时间格式，转换为 xxxx/xx/xx的格式 
-    EndTime = EndTime.replace(/\-/g, "/");
-    //将计算间隔类性字符转换为小写
-    var sTime =new Date(EndTime); //开始时间
-    var eTime =new Date(); //结束时间
-    //作为除数的数字
-    var timeType =1;
-            timeType =1000*3600;
-	Allhours = (sTime.getTime()- eTime.getTime()) / parseInt(timeType)
-	diffday = parseInt(Allhours/24)
-	diffhours = Allhours%24
-	diffhour = diffhours.toFixed(1)  //tofixed的参数是用来保留几位小数并且四舍五入
-	if (diffday <0 ){
-	return -diffday + '天' + -diffhour + '小时'}
-	else{
-    return diffday + '天' + diffhour + '小时';}
+// 获取下一个整数百天纪念日天数
+function getNextCelebrateNumber(currentDays, step) {
+    return Math.ceil(currentDays / step) * step;
 }
-//------------------------------------------------------------------------------------------------------------------------------------
-/*
- *   功能:实现VBScript的DateAdd功能.
- *   参数:interval,字符串表达式，表示要添加的时间间隔.
- *   参数:number,数值表达式，表示要添加的时间间隔的个数.
- *   参数:date,时间对象.
- *   返回:新的时间对象.
- *   var now = new Date();
- *   var newDate = DateAdd( "d", 5, now);
- *---------------   DateAdd(interval,number,date)   -----------------
- */
+
+// 在日期上加天数
 function DateAdd(interval, number, date) {
-    switch (interval) {
-    case "y ": {
-        date.setFullYear(date.getFullYear() + number);
-        return date;
-        break;
-    }
-    case "q ": {
-        date.setMonth(date.getMonth() + number * 3);
-        return date;
-        break;
-    }
-    case "m ": {
-        date.setMonth(date.getMonth() + number);
-        return date;
-        break;
-    }
-    case "w ": {
-        date.setDate(date.getDate() + number * 7);
-        return date;
-        break;
-    }
-    case "d ": {
+    if (interval === "d") {
         date.setDate(date.getDate() + number);
-        return date;
-        break;
     }
-    case "h ": {
-        date.setHours(date.getHours() + number);
-        return date;
-        break;
-    }
-    case "m ": {
-        date.setMinutes(date.getMinutes() + number);
-        return date;
-        break;
-    }
-    case "s ": {
-        date.setSeconds(date.getSeconds() + number);
-        return date;
-        break;
-    }
-    default: {
-        date.setDate(d.getDate() + number);
-        return date;
-        break;
-    }
-    }
+    return date;
 }
 
-//var now = new Date();
-// 加五天.
-//var newDate = DateAdd("d ", 6, now);
-//alert(newDate.toLocaleDateString())
-// 加两个月.
-//newDate = DateAdd("m ", 2, now);
-//alert(newDate.toLocaleDateString())
-// 加一年
-//newDate = DateAdd("y ", 1, now);
-//alert(newDate.toLocaleDateString())
-
-
-//------------------------------------------------------------------------------------------------------------------------------------------------------
-
-		//现在这一个函数就可以计算纪念日是什么日期了
-		//第一个参数是恋人开始的时间，格式是"XXXX/XX/XX",
-		//第二个参数是天数
-function getCelebrateDay(startTime, days){
-			//	startTime = "2018/11/27" //这是第一天认识的
-			startTime = startTime.replace(/\-/g, "/");
- 		   //将计算间隔类性字符转换为小写
- 		   var sTime =new Date(startTime); //开始时间
-			var newDate = DateAdd("d ", days, sTime); //设置认识99天纪念日 ,嵌套上一个函数
-			return newDate.toLocaleDateString()
+// 根据起始日期和天数得纪念日是哪天
+function getCelebrateDay(startTime, days) {
+    startTime = startTime.replace(/\-/g, "/");
+    var sTime = new Date(startTime);
+    var newDate = DateAdd("d", days, sTime);
+    return newDate.toLocaleDateString();
 }
 
-//---------------------------------------------------------------------------------------------------------------------
+// 自动获取下一个生日（今年没到就用今年，今年到了就用明年）
+function getNextBirthday(month, day) {
+    var now = new Date();
+    var year = now.getFullYear();
+    var birthday = new Date(year, month - 1, day);
+    if (birthday < now) {
+        birthday.setFullYear(year + 1);
+    }
+    return birthday.toISOString().slice(0, 10);
+}
+
+// 距离某日还有多少天
+function GetDateDiffend(EndTime) {
+    EndTime = EndTime.replace(/\-/g, "/");
+    var sTime = new Date(EndTime);
+    var eTime = new Date();
+    var timeType = 1000 * 3600 * 24;
+    var diffday = parseInt((sTime - eTime) / timeType);
+    return diffday >= 0 ? diffday : -diffday;
+}
 </script>
 </head>
+
 <body>
- <center>
- 
-<h1 >好好学习，天天向上</h1><!--建立标题-->
+<center>
+<h1>好好学习，天天向上</h1>
 <div style="padding-right: 10%">
-<p align="right" >时有女子，亦有宁姝；美口善言，和颜善笑。</p>
+<p align="right">时有女子，亦有宁姝；美口善言，和颜善笑。</p>
 </div>
-<hr><!--插入水平线-->
+<hr>
 
-<table border="" cellspacing="" cellpadding="" style="background-color: #e5ffe5;width: 80%;">
-
+<table border="" cellspacing="" cellpadding="" style="background-color: #e5ffe5; width: 80%;">
 <tr>
-
-
-<td width="50%" height="60%" style=" padding: 32px;">
-<!--设置一个计算有意义的时间距离-->
-<div  >
-	<p>现在是 
-	<span style="color:#00ccff ;" > 
-		<script>document.write(Date())
-		</script>
-	</span> 
+<td width="50%" style="padding: 32px;">
+<div>
+<p>现在是 
+    <span style="color:#00ccff;"> 
+        <script>document.write(new Date().toLocaleString())</script>
+    </span>
 </p>
-<hr />	
+<hr>
+
 <h2 style="text-align: center;">相识与恋爱</h2>
-<p>2018年11月27日认识（第一次见面），认识第 
-	<span style="color:#00ccff ;font-size:32px;" > 
-		<script>document.write(GetDateDiffstart("2018/11/27"))
-		</script>
-	</span> 天
+<p>2018年11月27日认识，已认识
+    <span style="color:#00ccff; font-size:24px;"> 
+        <script>
+        var rsDays = GetDateDiffstart("2018/11/27");
+        document.write(rsDays);
+        </script>
+    </span> 天
+</p>
+<p>下一个整数百天纪念日是第
+    <span style="color:#00ccff; font-size:24px;">
+        <script>
+        var nextRs = getNextCelebrateNumber(rsDays, 100);
+        document.write(nextRs);
+        </script>
+    </span> 天（即
+    <span style="color:#00ccff; font-size:24px;">
+        <script>
+        document.write(getCelebrateDay("2018/11/27", nextRs));
+        </script>
+    </span>，距离还有
+    <span style="color:#00ccff; font-size:24px;">
+        <script>
+        document.write(nextRs - rsDays);
+        </script>
+    </span> 天)
 </p>
 
-<p>2019年2月14日成为恋人，恋人第
-	<span style="color:#00ccff ;font-size:32px;" > 
-		<script>
-			document.write(GetDateDiffstart("2019/02/14"))
-		</script></span>	天
+<hr>
+
+<p>2019年2月14日成为恋人，已恋爱
+    <span style="color:#00ccff; font-size:24px;"> 
+        <script>
+        var laDays = GetDateDiffstart("2019/02/14");
+        document.write(laDays);
+        </script>
+    </span> 天
+</p>
+<p>下一个整数百天纪念日是第
+    <span style="color:#00ccff; font-size:24px;">
+        <script>
+        var nextLa = getNextCelebrateNumber(laDays, 100);
+        document.write(nextLa);
+        </script>
+    </span> 天（即
+    <span style="color:#00ccff; font-size:24px;">
+        <script>
+        document.write(getCelebrateDay("2019/02/14", nextLa));
+        </script>
+    </span>，距离还有
+    <span style="color:#00ccff; font-size:24px;">
+        <script>
+        document.write(nextLa - laDays);
+        </script>
+    </span> 天)
 </p>
 
-<hr />
+<hr>
+
 <h2 style="text-align: center;">生日倒计时</h2>
-<p>离公子萧兮2025年（农历）生日还有
-	<span style="color:#00ccff ;font-size:32px;" > 
-		<script>document.write(GetDateDiffend("2025/07/08"))
-		</script>
-	</span>	
+<p>离公子萧兮下一个生日还有 
+    <span style="color:#00ccff; font-size:24px;"> 
+        <script>
+        var gxNext = getNextBirthday(7, 8);
+        document.write(GetDateDiffend(gxNext) + " 天");
+        </script>
+    </span>
 </p>
 
-<p>离远志2026年（农历）生日还有
-	<span style="color:#00ccff ;font-size:32px;" > 
-		<script>document.write(GetDateDiffend("2026/03/01"))
-		</script>
-	</span>	
-</p>
-<hr />
-<h2 style="text-align: center;">纪念日</h2>
-<p>认识2599天纪念日是
-	<span style="color:#00ccff ;font-size:32px;" > 
-		<script>
-			document.write(getCelebrateDay("2018/11/27",2599))
-			//第一个参数是认识的时间，格式是"XXXX/XX/XX",第二个参数是天数
-		</script></span>
-</p>
-<p>
-恋人2599天纪念日是
-<span style="color:#00ccff ;font-size:32px;" > 
-		<script>
-		//设置认识399天纪念日
-			document.write(getCelebrateDay("2019/02/14", 2599))
-		//第一个参数是恋人开始的时间，格式是"XXXX/XX/XX",第二个参数是天数
-		</script></span>
+<p>离远志下一个生日还有 
+    <span style="color:#00ccff; font-size:24px;"> 
+        <script>
+        var yzNext = getNextBirthday(3, 1);
+        document.write(GetDateDiffend(yzNext) + " 天");
+        </script>
+    </span>
 </p>
 
-<!--
-<hr />
-<h2 style="text-align: center;">考研倒计时</h2>
-<p>离2023年考研时间2022年12月24日剩余
-	<span style="color:#00ccff ;font-size:32px;" > 
-		<script>document.write(GetDateDiffend("2022/12/24"))
-		</script>
-	</span>	
-</p>
---->
-	
 </div>
 </td>
 </tr>
