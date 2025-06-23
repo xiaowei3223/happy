@@ -1,69 +1,78 @@
 <!doctype html>
-<html>
+<html lang="zh-CN">
 <head>
-<meta charset="utf-8">
-<title>celebrateday</title>
-<script>
-// 已认识多少天
-function GetDateDiffstart(startTime) {
-    startTime = startTime.replace(/\-/g, "/");
-    var sTime = new Date(startTime);
-    var eTime = new Date();
-    var timeType = 1000 * 3600 * 24;
-    var diffday = parseInt((eTime - sTime) / timeType);
-    return diffday >= 0 ? diffday : -diffday;
-}
+  <meta charset="utf-8">
+  <title>自动农历生日示例</title>
+  <!-- ✅ 引入 solarlunar 库 -->
+  <script src="https://cdn.jsdelivr.net/npm/solarlunar@3.0.0/lib/solarlunar.min.js"></script>
 
-// 获取下一个整数百天纪念日天数
-function getNextCelebrateNumber(currentDays, step) {
-    return Math.ceil(currentDays / step) * step;
-}
+  <script>
+    // -------------------- 公用函数 --------------------
+    function GetDateDiffstart(startTime) {
+      startTime = startTime.replace(/\-/g, "/");
+      var sTime = new Date(startTime);
+      var eTime = new Date();
+      var timeType = 1000 * 3600 * 24;
+      var diffday = parseInt((eTime - sTime) / timeType);
+      return diffday >= 0 ? diffday : -diffday;
+    }
 
-// 在日期上加天数
-function DateAdd(interval, number, date) {
-    if (interval === "d") {
+    function getNextCelebrateNumber(currentDays, step) {
+      return Math.ceil(currentDays / step) * step;
+    }
+
+    function DateAdd(interval, number, date) {
+      if (interval === "d") {
         date.setDate(date.getDate() + number);
+      }
+      return date;
     }
-    return date;
-}
 
-// 根据起始日期和天数得纪念日是哪天
-function getCelebrateDay(startTime, days) {
-    startTime = startTime.replace(/\-/g, "/");
-    var sTime = new Date(startTime);
-    var newDate = DateAdd("d", days, sTime);
-    return newDate.toLocaleDateString();
-}
-
-// 自动获取下一个生日（今年没到就用今年，今年到了就用明年）
-function getNextBirthday(month, day) {
-    var now = new Date();
-    var year = now.getFullYear();
-    var birthday = new Date(year, month - 1, day);
-    if (birthday < now) {
-        birthday.setFullYear(year + 1);
+    function getCelebrateDay(startTime, days) {
+      startTime = startTime.replace(/\-/g, "/");
+      var sTime = new Date(startTime);
+      var newDate = DateAdd("d", days, sTime);
+      return newDate.toLocaleDateString();
     }
-    return birthday.toISOString().slice(0, 10);
-}
 
-// 距离某日还有多少天
-function GetDateDiffend(EndTime) {
-    EndTime = EndTime.replace(/\-/g, "/");
-    var sTime = new Date(EndTime);
-    var eTime = new Date();
-    var timeType = 1000 * 3600 * 24;
-    var diffday = parseInt((sTime - eTime) / timeType);
-    return diffday >= 0 ? diffday : -diffday;
-}
-</script>
+    function GetDateDiffend(EndTime) {
+      EndTime = EndTime.replace(/\-/g, "/");
+      var sTime = new Date(EndTime);
+      var eTime = new Date();
+      var timeType = 1000 * 3600 * 24;
+      var diffday = parseInt((sTime - eTime) / timeType);
+      return diffday >= 0 ? diffday : -diffday;
+    }
+
+    // -------------------- 自动农历转公历 --------------------
+    function getNextLunarBirthday(lunarMonth, lunarDay) {
+      const today = new Date();
+      const currentYear = today.getFullYear();
+
+      // 用 solarlunar 库转换今年农历生日
+      let solar = solarlunar.lunar2solar(currentYear, lunarMonth, lunarDay, false);
+      let solarDate = new Date(`${solar.cYear}-${solar.cMonth}-${solar.cDay}`);
+
+      if (solarDate >= today) {
+        return `${solar.cYear}-${pad(solar.cMonth)}-${pad(solar.cDay)}`;
+      } else {
+        // 如果今年已过，就转明年
+        let nextSolar = solarlunar.lunar2solar(currentYear + 1, lunarMonth, lunarDay, false);
+        return `${nextSolar.cYear}-${pad(nextSolar.cMonth)}-${pad(nextSolar.cDay)}`;
+      }
+    }
+
+    // 辅助函数：补零
+    function pad(n) {
+      return n < 10 ? '0' + n : n;
+    }
+
+  </script>
 </head>
 
 <body>
 <center>
 <h1>好好学习，天天向上</h1>
-<div style="padding-right: 10%">
-<p align="right">时有女子，亦有宁姝；美口善言，和颜善笑。</p>
-</div>
 <hr>
 
 <table border="" cellspacing="" cellpadding="" style="background-color: #e5ffe5; width: 80%;">
@@ -75,6 +84,7 @@ function GetDateDiffend(EndTime) {
         <script>document.write(new Date().toLocaleString())</script>
     </span>
 </p>
+
 <hr>
 
 <h2 style="text-align: center;">相识与恋爱</h2>
@@ -136,20 +146,30 @@ function GetDateDiffend(EndTime) {
 
 <hr>
 
-<h2 style="text-align: center;">生日倒计时</h2>
-<p>离公子萧兮下一个生日还有 
-    <span style="color:#00ccff; font-size:24px;"> 
+<h2 style="text-align: center;">生日倒计时（自动农历转公历）</h2>
+<p>公子萧兮下一个生日：
+    <span style="color:#00ccff; font-size:24px;">
         <script>
-        var gxNext = getNextBirthday(7, 8);
+        var gxNext = getNextLunarBirthday(6, 14);
+        document.write(gxNext);
+        </script>
+    </span>，距离还有
+    <span style="color:#00ccff; font-size:24px;">
+        <script>
         document.write(GetDateDiffend(gxNext) + " 天");
         </script>
     </span>
 </p>
 
-<p>离远志下一个生日还有 
-    <span style="color:#00ccff; font-size:24px;"> 
+<p>远志下一个生日：
+    <span style="color:#00ccff; font-size:24px;">
         <script>
-        var yzNext = getNextBirthday(3, 1);
+        var yzNext = getNextLunarBirthday(1, 13);
+        document.write(yzNext);
+        </script>
+    </span>，距离还有
+    <span style="color:#00ccff; font-size:24px;">
+        <script>
         document.write(GetDateDiffend(yzNext) + " 天");
         </script>
     </span>
