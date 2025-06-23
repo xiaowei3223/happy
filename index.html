@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <title>自动农历生日示例</title>
-  <!-- ✅ 引入 solarlunar 库 -->
-  <script src="https://cdn.jsdelivr.net/npm/solarlunar@3.0.0/lib/solarlunar.min.js"></script>
+  <!-- ✅ 引入 solarlunar CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/solarlunar@3.0.0/dist/solarlunar.min.js"></script>
 
   <script>
-    // -------------------- 公用函数 --------------------
+    // ---------------------- 公用函数 ----------------------
     function GetDateDiffstart(startTime) {
       startTime = startTime.replace(/\-/g, "/");
       var sTime = new Date(startTime);
@@ -44,25 +44,25 @@
       return diffday >= 0 ? diffday : -diffday;
     }
 
-    // -------------------- 自动农历转公历 --------------------
+    // ---------------------- 自动农历转公历 ----------------------
     function getNextLunarBirthday(lunarMonth, lunarDay) {
       const today = new Date();
       const currentYear = today.getFullYear();
 
-      // 用 solarlunar 库转换今年农历生日
+      // 今年的农历转公历
       let solar = solarlunar.lunar2solar(currentYear, lunarMonth, lunarDay, false);
-      let solarDate = new Date(`${solar.cYear}-${solar.cMonth}-${solar.cDay}`);
+      let solarDate = new Date(`${solar.cYear}-${pad(solar.cMonth)}-${pad(solar.cDay)}`);
 
       if (solarDate >= today) {
         return `${solar.cYear}-${pad(solar.cMonth)}-${pad(solar.cDay)}`;
       } else {
-        // 如果今年已过，就转明年
+        // 今年已过，用明年
         let nextSolar = solarlunar.lunar2solar(currentYear + 1, lunarMonth, lunarDay, false);
         return `${nextSolar.cYear}-${pad(nextSolar.cMonth)}-${pad(nextSolar.cDay)}`;
       }
     }
 
-    // 辅助函数：补零
+    // 补零
     function pad(n) {
       return n < 10 ? '0' + n : n;
     }
@@ -147,7 +147,7 @@
 <hr>
 
 <h2 style="text-align: center;">生日倒计时（自动农历转公历）</h2>
-<p>公子萧兮下一个生日：
+<p>公子萧兮下一个（农历六月十四）生日：
     <span style="color:#00ccff; font-size:24px;">
         <script>
         var gxNext = getNextLunarBirthday(6, 14);
@@ -161,7 +161,7 @@
     </span>
 </p>
 
-<p>远志下一个生日：
+<p>远志下一个（农历一月十三）生日：
     <span style="color:#00ccff; font-size:24px;">
         <script>
         var yzNext = getNextLunarBirthday(1, 13);
